@@ -47,7 +47,7 @@ function wxjs2(){
             alert('nonce_str:::'+obj.nonce_str)
             alert('sign:::'+obj.sign)
             alert('url:::'+obj.url)
-            alert('url:::'+obj.appid)
+            alert('appid:::'+obj.appid)
             wx.config({
                 debug: true,
                 appId: obj.appid,
