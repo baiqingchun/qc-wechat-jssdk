@@ -28,12 +28,28 @@ wx.config({
 
 这个项目利用memory-cache模块进行缓存access_token、jsapi_ticket，有效时长7000秒。
 
-## 配置
+## 使用方法
 1、配置上微信公众号的 appid，secret。在公众号：开发-》基本配置中获得
  ```
-const _jssdk = require('jssdk')
+const _jssdk = require('qc-wechat-jssdk')
 _jssdk.configure({appId:'',secret:""})
 
+```
+2、调用方法getjssdk，获取前端需要的参数：nonceStr，signature，timestamp
+```
+ //这里 url 必须是动态的，因为微信客户端会在你的链接末尾加入其它参数，如果不是动态获取当前链接，将导致分享后的页面签名失败。
+   let url = req.query.url
+   let data =await _jssdk.getjssdk(url)
+   console.log(data)   
+```
+data 的值，返回给前端
+```
+        "timestamp": "1586765360",
+        "nonceStr": "melrd7dk5a",
+        "signature": "",
+        "jsapi_ticket": "",
+        "appId": "",
+        "url": ""
 ```
 ## API
 
