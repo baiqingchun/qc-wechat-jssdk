@@ -50,10 +50,10 @@ function wxjs2(){
             alert('appid:::'+obj.appid)
             wx.config({
                 debug: true,
-                appId: obj.appid,
+                appId: obj.appId,
                 timestamp: obj.timestamp,
-                nonceStr: obj.nonce_str,
-                signature: obj.sign,
+                nonceStr: obj.nonceStr,
+                signature: obj.signature,
                 jsApiList: ['updateAppMessageShareData','updateTimelineShareData']
             });
             // var formLst = JSON.parse($("#session").html());
