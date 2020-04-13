@@ -2,9 +2,8 @@
 ## Build Setup
 
 ```bash
+npm install qc-wechat-jssdk
 
-# Install dependencies
-npm install
 
 ```
 ## 介绍
@@ -36,7 +35,7 @@ const _jssdk = require('jssdk')
 _jssdk.configure({appId:'',secret:""})
 
 ```
-##接口 API
+##API
 
 #### 方法：getjssdk(url)
 **说明：获取微信 jssdk 中 wx.config 方法里需要的appId，timestamp，nonceStr，signature**
