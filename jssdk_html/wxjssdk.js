@@ -43,11 +43,6 @@ function wxjs2(){
             var obj = JSON.parse(data).data;
 
             console.log(obj);
-            alert('timestamp:::'+obj.timestamp)
-            alert('nonce_str:::'+obj.nonce_str)
-            alert('sign:::'+obj.sign)
-            alert('url:::'+obj.url)
-            alert('appid:::'+obj.appid)
             wx.config({
                 debug: true,
                 appId: obj.appId,
