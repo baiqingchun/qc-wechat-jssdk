@@ -24,7 +24,7 @@ wx.config({
 
 为了降低开发难度，这个项目封装了从微信端获取access_token、jsapi_ticket，生成签名，并且进行缓存。
 
-利用这个项目只需要配置上公众号的 appId,开发者密码(AppSecret),再调用方法getjssdk，就可以获取timestamp,nonceStr,signature。
+利用这个项目只需要配置上公众号的 appId、AppSecret,再调用方法getjssdk，就可以获取timestamp,nonceStr,signature。
 
 这个项目利用memory-cache模块进行缓存access_token、jsapi_ticket，有效时长7000秒。
 
@@ -52,7 +52,7 @@ data 的值，返回给前端
         "url": ""
 ```
 
-3、上面两步已经完成了后台的开发，如果想自定义缓存机制，可以直接调用方法`getTokenAndTicket`，来获取access_token、jsapi_ticket。
+3、上面两步已经完成了后台的开发，如果想自定义缓存机制，可调用方法`getTokenAndTicket`，来获取access_token、jsapi_ticket。
 
 **注意：这个方法不会缓存 access_token、jsapi_ticket，有限制次数，需要自定义缓存机制**
 ```
