@@ -6,21 +6,26 @@ let config = {appId:'',secret:""}
  * 获取access_token
  * @returns {*}
  */
-function  getTokenByWechat() {
+async function  getTokenByWechat() {
     console.log("get token ")
     let options = {
         method: 'POST',
         uri: "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appId="+config.appId+"&secret="+config.secret,
         json: true // Automatically stringifies the body to JSON
     };
-
-    return request(options)
+    let data =await request(options)
+    if(data.errcode){
+        console.log('token error:',data)
+        data.msg = 'token error'
+        throw new Error(JSON.stringify(data));
+    }
+    return data
 }
 function saveToken(op,timeExpires){
     cacheme.put('access_token',op,timeExpires)
 }
 function getToken(){
-   let op =  cacheme.get('access_token')||{access_token:''}
+    let op =  cacheme.get('access_token')||{access_token:''}
     return op.access_token
 }
 /**
@@ -28,10 +33,6 @@ function getToken(){
  */
 async  function updateToken() {
     let data = await getTokenByWechat()
-    if(data.errcode){
-        console.log('token error:',data)
-        throw new Error(JSON.stringify(data));
-    }
 
     let timeExpires = 7000*1000
     let op = {access_token:data.access_token}
@@ -43,20 +44,29 @@ async function isTokenExpire(){
     let token = getToken();
     if(!token){
 
-      token = await updateToken()
+        token = await updateToken()
     }
     return token
 }
-
+async function getTicketByWechatInterface(token){
+    let options = {
+        method: 'POST',
+        uri: `https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${token}&type=jsapi`,
+        json: true // Automatically stringifies the body to JSON
+    };
+    let wxdata =await request(options)
+    if(wxdata.errcode){
+        console.log('ticket error:',wxdata)
+        wxdata.msg = 'ticket error'
+        throw new Error(JSON.stringify(wxdata));
+    }
+    return wxdata
+}
 async function get_ticket_by_wechat(){
     let data = await isTokenExpire()
     console.log('get jsapi_ticket')
-    let options = {
-        method: 'POST',
-        uri: `https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${data}&type=jsapi`,
-        json: true // Automatically stringifies the body to JSON
-    };
-   return request(options)
+    let ticketData = await getTicketByWechatInterface(data)
+    return ticketData
 }
 
 function saveTicket(op,timeExpires){
@@ -70,10 +80,6 @@ function getTicket(){
 async function update_jsapi_ticket() {
 
     let wxdata = await get_ticket_by_wechat()
-    if(wxdata.errcode){
-        console.log('ticket error:',wxdata)
-        throw new Error(JSON.stringify(wxdata));
-    }
     let timeExpires = 7000*1000
     let op = {ticket:wxdata.ticket}
     saveTicket(op,timeExpires)
@@ -142,9 +148,19 @@ async  function jssdk(url){
     let signature =  jssdkSign(jsapi_ticket,nonceStr,timestamp,url)
     return {timestamp,nonceStr,signature,jsapi_ticket}
 }
+async function getTokenAndTicket(){
+    let token =  await updateToken()
+    let ticketData =await getTicketByWechatInterface(token)
+    let ticket = ticketData.ticket
+    return {token,ticket}
+}
 exports.getjssdk =async function(url){
     let data = await jssdk(url)
     data.appId = config.appId
+    return data
+}
+exports.getTokenAndTicket = async function(){
+    let data = await getTokenAndTicket()
     return data
 }
 exports.configure = function (option) {
