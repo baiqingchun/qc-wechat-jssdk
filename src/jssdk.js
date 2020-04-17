@@ -163,6 +163,13 @@ exports.getTokenAndTicket = async function(){
     let data = await getTokenAndTicket()
     return data
 }
+exports.sign = function(jsapi_ticket,url){
+    let nonceStr = createNonceStr();//16位随机串
+    let timestamp =createTimestamp()
+    let signature =  jssdkSign(jsapi_ticket,nonceStr,timestamp,url)
+    let appId = config.appId
+    return {timestamp,nonceStr,signature,jsapi_ticket,appId,url}
+}
 exports.configure = function (option) {
     config = option
 }

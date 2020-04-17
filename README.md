@@ -52,20 +52,6 @@ data 的值，返回给前端
         "url": ""
 ```
 
-3、上面两步已经完成了后台的开发，如果想自定义缓存机制，可调用方法`getTokenAndTicket`，来获取access_token、jsapi_ticket。
-
-**注意：这个方法不会缓存 access_token、jsapi_ticket，有限制次数，需要自定义缓存机制**
-```
- let data = await _jssdk.getTokenAndTicket()
- console.log(data)
-```
-data 的值
-```
-{
- token:'',
- ticket:'' 
-}
-```
 ## API
 
 #### 1、getjssdk(url)
@@ -103,7 +89,7 @@ jsapi_ticket | String |  公众号用于调用微信JS接口的临时票据
 }
 
 ```
-#### 2、getTokenAndTicket()
+#### 2、 getTokenAndTicket()
 **说明：直接从微信端获取access_token、jsapi_ticket，有效时长7200秒**
 
 **注意：这个方法没有缓存机制，有调用的次数限制，需要定制自己的缓存机制**
@@ -124,6 +110,37 @@ ticket | String |  公众号用于调用微信JS接口的临时票据
 {
         token:'',
         ticket:''
+}
+
+```
+
+#### 3、 sign(ticket,url)
+**说明： 根据微信jsapi_ticket，和页面 url 生成签名**
+
+#### （1）参数：
+字段 | 类型 | 描述
+---|---|---
+url | String |  当前网页的URL，不包含#及其后面部分，可通过location.href.split('#')[0]方法获得;
+ticket | String |  公众号用于调用微信JS接口的临时票据
+
+#### （2）返回数据
+字段 | 类型 | 描述
+---|---|---
+appId | String |  公众号的唯一标识
+timestamp | String |  生成签名的时间戳
+nonceStr | String |  生成签名的随机串
+signature | String |  签名
+jsapi_ticket | String |  公众号用于调用微信JS接口的临时票据
+
+数据示例：
+```
+{
+  timestamp: "1587086143",
+  nonceStr: "aowjqxuvfr",
+  signature: "",
+  jsapi_ticket: "",
+  appId: "",
+  url: ""
 }
 
 ```
